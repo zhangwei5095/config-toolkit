@@ -33,6 +33,15 @@ public abstract class GeneralConfigGroup extends ConcurrentHashMap<String, Strin
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralConfigGroup.class);
 
+	/**
+	 * 配置组的最后加载时间
+	 */
+	private long lastLoadTime;
+
+	public long getLastLoadTime() {
+		return lastLoadTime;
+	}
+
 	@Override
 	public final String get(String key) {
 		String val = super.get(key);
@@ -49,11 +58,12 @@ public abstract class GeneralConfigGroup extends ConcurrentHashMap<String, Strin
 
 	@Override
 	public final void putAll(Map<? extends String, ? extends String> configs) {
+		lastLoadTime = System.currentTimeMillis();
 		if (configs != null && configs.size() > 0) {
 			// clear
 			if (this.size() > 0) {
 				final Set<String> newKeys = Sets.newHashSet();
-				newKeys.addAll(this.keySet());
+				newKeys.addAll(configs.keySet());
 				final Iterable<String> redundances = Iterables.filter(Sets.newHashSet(this.keySet()), new Predicate<String>() {
 
 					@Override
@@ -62,7 +72,7 @@ public abstract class GeneralConfigGroup extends ConcurrentHashMap<String, Strin
 					}
 				});
 				for (String redundance : redundances) {
-					this.remove(redundance);
+					super.remove(redundance);
 				}
 			}
 

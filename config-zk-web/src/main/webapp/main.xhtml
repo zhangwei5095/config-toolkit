@@ -4,6 +4,13 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<title>配置管理面板</title>
+	<script type="text/javascript">
+	$(document).on("keydown", ".ui-cell-editor-input input", function(event) {
+	    if (event.keyCode == 13) {
+	        $(this).closest("tr").find(".ui-row-editor .ui-icon-check").click();
+	    }
+	});
+	</script>
 </h:head>
 <h:body style="padding:10px;">
 	<h:form id="messageBox">
@@ -107,7 +114,7 @@
 						<p:commandLink id="importAllBt" type="button" value="导入(ZIP)" style="font-size:small;margin-right:6px;"
 							disabled="#{empty nodeAuthMB.authedNode || empty versionMB.selectedVersion}" onclick="PF('uploadZip').show()" />
 						<!-- @Deprecated -->
-						<p:commandLink id="importAllOldBt" type="button" value="导入旧版数据(ZIP)" style="font-size:small;margin-right:6px;"
+						<p:commandLink id="importAllOldBt" type="button" value="导入v2.x版本数据(ZIP)" style="font-size:small;margin-right:6px;"
 							disabled="#{empty nodeAuthMB.authedNode || empty versionMB.selectedVersion}" onclick="PF('uploadZipOld').show()" />
 					</p:toolbarGroup>
 				</p:toolbar>

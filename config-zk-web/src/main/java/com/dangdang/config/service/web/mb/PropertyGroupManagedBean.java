@@ -176,7 +176,6 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 	/**
 	 * 选中配置组
 	 * 
-	 * @return
 	 */
 	public void onMenuSelected(SelectEvent event) {
 		String selectedNode = (String) event.getObject();
@@ -189,7 +188,6 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 	/**
 	 * 上传配置
 	 * 
-	 * @param event
 	 */
 	public void propertyGroupUpload(FileUploadEvent event) {
 		String fileName = event.getFile().getFileName();
@@ -242,19 +240,19 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 
 	/**
 	 * @param inputstream
-	 * @return
+	 * @return property item vo list
 	 * @throws IOException
 	 */
 	private List<PropertyItemVO> parseInputFile(InputStream inputstream) throws IOException {
 		List<String> lines = IOUtils.readLines(inputstream, Charsets.UTF_8.name());
 		List<PropertyItemVO> items = Lists.newArrayList();
 		String previousLine = null;
-		for (int i = 1; i < lines.size(); i++) {
+		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			if (!line.startsWith("#")) {
 				Iterable<String> parts = PROPERTY_SPLITTER.split(line);
 				if (Iterables.size(parts) == 2) {
-					PropertyItemVO item = new PropertyItemVO(Iterables.getFirst(parts, null), Iterables.getLast(parts));
+					PropertyItemVO item = new PropertyItemVO(Iterables.getFirst(parts, null).trim(), Iterables.getLast(parts).trim());
 					if (previousLine != null && previousLine.startsWith("#")) {
 						item.setComment(StringUtils.trimLeadingCharacter(previousLine, '#').trim());
 					}
@@ -270,7 +268,6 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 	/**
 	 * 上传配置
 	 * 
-	 * @param event
 	 */
 	public void propertyZipUpload(FileUploadEvent event) {
 		String fileName = event.getFile().getFileName();
@@ -296,11 +293,10 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 			}
 		}
 	}
-	
+
 	/**
 	 * 上传配置(Old)
 	 * 
-	 * @param event
 	 */
 	@Deprecated
 	public void propertyZipUploadOld(FileUploadEvent event) {
@@ -327,7 +323,7 @@ public class PropertyGroupManagedBean implements Serializable, IObserver {
 			}
 		}
 	}
-	
+
 	@Deprecated
 	private void savePropertyGroupOld(String fileName, String group, InputStream inputstream) throws IOException {
 		Reader reader = new InputStreamReader(inputstream, Charsets.UTF_8);
